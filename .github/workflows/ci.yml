@@ -34,5 +34,5 @@ jobs:
           go-version: '1.23.0'
 
       - name: Run style tests
-        run: test -z $(go test ./internal/auth/) 
+        run: test -z $(go fmt main.go) 
   
