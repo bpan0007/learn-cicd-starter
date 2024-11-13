@@ -32,7 +32,7 @@ jobs:
               uses: 'google-github-actions/setup-gcloud@v2'
         
             - name: 'Use gcloud CLI'
-                run: 'gcloud info'
+              run: 'gcloud info'
             
             - name: Deploy to cloud run
               run: |
