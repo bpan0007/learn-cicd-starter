@@ -1,13 +1,16 @@
 name: cd
 
 on:
-  push:
+  pull_request:
     branches: [main]
 
 jobs:
     Deploy:
         name: Deploy
         runs-on: ubuntu-latest
+        permissions:
+            contents: 'read'
+            id-token: 'write'
 
         steps:
             - name: Check out code
@@ -17,10 +20,21 @@ jobs:
               uses: actions/setup-go@v5
               with:
                 go-version: '1.23.0'
-
             - name: build
               run: 
                 ./scripts/buildprod.sh
+            - id: 'auth'
+              uses: 'google-github-actions/auth@v2'
+              with:
+                credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          
+            - name: 'Set up Cloud SDK'
+              uses: 'google-github-actions/setup-gcloud@v2'
+        
+            - name: 'Use gcloud CLI'
+              run: 'gcloud info'
+            - name: 'build'
+              run: gcloud builds submit --tag us-central1-docker.pkg.dev/notely-441610/notely-ar-repo/notely:latest .
             
             - name: Deploy to cloud run
               run: |
